@@ -74,7 +74,12 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users"
+					"notebookPath": "/Users/wsgoh-training_hotmail.com#ext#@wsgohtraininghotmail.onmicrosoft.com/03-Data-Ingestion-Via-ADF/03-Data-Transformation",
+					"baseParameters": {
+						"accountName": "ws20210921blob",
+						"accountKey": "AX+LSsQdbMkRLaUfQBvuPhezUYi2M5drFlrasCJfKiTn2NUMz63avYzH8WqoQAHBbQgQt9ZjkMfdYqMVj6FECQ==",
+						"containerName": "dwtemp"
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureDatabricks1",
