@@ -1,0 +1,29 @@
+{
+	"name": "Trigger_copy_from_sql_to_adls",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "CopyPipeline_pvk",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2021-09-22T07:13:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"weekDays": [
+						"Thursday"
+					]
+				}
+			}
+		}
+	}
+}
