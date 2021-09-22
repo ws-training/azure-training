@@ -5,10 +5,19 @@
 		"factoryName": {
 			"value": "ws20210921adf"
 		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
 		"AzureStorageLinkedService_connectionString": {
+			"value": ""
+		},
+		"DestinationContainer_connectionString": {
+			"value": ""
+		},
+		"PublicDataset_sasUri": {
 			"value": ""
 		}
 	}
