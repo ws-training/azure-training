@@ -1,5 +1,5 @@
 {
-	"name": "Import CSV",
+	"name": "pipeline_ImportData",
 	"properties": {
 		"activities": [
 			{
