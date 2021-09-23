@@ -1,0 +1,264 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ws20210921adf"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BookCSV",
+								"type": "DatasetReference"
+							},
+							"name": "BooksCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "KeikosHistoryCSV",
+								"type": "DatasetReference"
+							},
+							"name": "KeikosHistoryCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "MinervasHistoryCSV",
+								"type": "DatasetReference"
+							},
+							"name": "MinervasHistoryCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "SvensHistoryCSV",
+								"type": "DatasetReference"
+							},
+							"name": "SvensHistoryCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "TrixiesHistoryCSV",
+								"type": "DatasetReference"
+							},
+							"name": "TrixiesHistoryCSV"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ReadersBooksInnerJoin",
+								"type": "DatasetReference"
+							},
+							"name": "ReadersBooksInnerJoin"
+						},
+						{
+							"dataset": {
+								"referenceName": "ReaderBooksOuterJoin",
+								"type": "DatasetReference"
+							},
+							"name": "ReadersBooksOuterJoin"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddReaderNameK"
+						},
+						{
+							"name": "AddReaderNameM"
+						},
+						{
+							"name": "AddReaderNameS"
+						},
+						{
+							"name": "AddReaderNameT"
+						},
+						{
+							"name": "AllReaders"
+						},
+						{
+							"name": "SortReadingHistory"
+						},
+						{
+							"name": "JoinReaderstoBooks"
+						},
+						{
+							"name": "RemoveDuplicateColumns"
+						},
+						{
+							"name": "JoinReadersToBooksOuter"
+						},
+						{
+							"name": "RemoveDuplicateColumns2"
+						}
+					],
+					"script": "source(output(\n\t\tBook_Id as integer '##0',\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tTitle as string,\n\t\tAuthor as string,\n\t\t{Author_l-f} as string,\n\t\tAdditional_Authors as string,\n\t\tAverage_Rating as float '0.00',\n\t\tPublisher as string,\n\t\tBinding as string,\n\t\tNumber_of_Pages as integer '##0',\n\t\tYear_Published as integer '##0',\n\t\tOriginal_Publication_Year as integer '##0'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> BooksCSV\nsource(output(\n\t\tBook_Id as integer '##0',\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tMy_Rating as integer '##0',\n\t\tDate_Read as date 'dd/MM/yyyy',\n\t\tDate_Added as date 'dd/MM/yyyy',\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tMy_Review as string,\n\t\tSpoiler as boolean,\n\t\tRead_Count as integer '##0',\n\t\tOriginal_Purchase_Date as date 'dd/MM/yyyy'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> KeikosHistoryCSV\nsource(output(\n\t\tBook_Id as integer '##0',\n\t\tISBN as string,\n\t\tMy_Rating as integer '##0',\n\t\tDate_Read as date 'dd/MM/yyyy',\n\t\tDate_Added as date 'dd/MM/yyyy',\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tMy_Review as string,\n\t\tSpoiler as boolean,\n\t\tPrivate_Notes as string,\n\t\tRead_Count as integer '##0',\n\t\tOriginal_Purchase_Date as date 'dd/MM/yyyy'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> MinervasHistoryCSV\nsource(output(\n\t\tBook_Id as integer '##0',\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tMy_Rating as integer '##0',\n\t\tDate_Read as date 'dd/MM/yyyy',\n\t\tDate_Added as date 'dd/MM/yyyy',\n\t\tOriginal_Purchase_Date as date 'dd/MM/yyyy',\n\t\tSpoiler as boolean,\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tPrivate_Notes as string,\n\t\tRead_Count as integer '##0',\n\t\tMy_Review as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SvensHistoryCSV\nsource(output(\n\t\tBook_Id as integer '##0',\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tMy_Rating as integer '##0',\n\t\tDate_Read as date 'dd/MM/yyyy',\n\t\tDate_Added as date 'dd/MM/yyyy',\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tMy_Review as string,\n\t\tSpoiler as boolean,\n\t\tPrivate_Notes as string,\n\t\tRead_Count as integer '##0',\n\t\tOriginal_Purchase_Date as date 'dd/MM/yyyy'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> TrixiesHistoryCSV\nKeikosHistoryCSV derive(Reader = 'Keiko Brooks') ~> AddReaderNameK\nMinervasHistoryCSV derive(Reader = 'Minerva Snape') ~> AddReaderNameM\nSvensHistoryCSV derive(Reader = 'Sven Dorjadt') ~> AddReaderNameS\nTrixiesHistoryCSV derive(Reader = 'Trixie Belden') ~> AddReaderNameT\nAddReaderNameK, AddReaderNameM, AddReaderNameS, AddReaderNameT union(byName: true)~> AllReaders\nAllReaders sort(asc(Book_Id, true)) ~> SortReadingHistory\nSortReadingHistory, BooksCSV join(AllReaders@Book_Id == BooksCSV@Book_Id\n\t&& AllReaders@ISBN == BooksCSV@ISBN,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinReaderstoBooks\nJoinReaderstoBooks select(mapColumn(\n\t\tBook_Id = AllReaders@Book_Id,\n\t\tISBN = AllReaders@ISBN,\n\t\tISBN13 = AllReaders@ISBN13,\n\t\tMy_Rating,\n\t\tDate_Read,\n\t\tDate_Added,\n\t\tBookshelves,\n\t\tExclusive_Shelf,\n\t\tMy_Review,\n\t\tSpoiler,\n\t\tRead_Count,\n\t\tOriginal_Purchase_Date,\n\t\tReader,\n\t\tPrivate_Notes,\n\t\tTitle,\n\t\tAuthor,\n\t\t{Author_l-f},\n\t\tAdditional_Authors,\n\t\tAverage_Rating,\n\t\tPublisher,\n\t\tBinding,\n\t\tNumber_of_Pages,\n\t\tYear_Published,\n\t\tOriginal_Publication_Year\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns\nBooksCSV, SortReadingHistory join(BooksCSV@Book_Id == AllReaders@Book_Id\n\t&& BooksCSV@ISBN == AllReaders@ISBN,\n\tjoinType:'right',\n\tbroadcast: 'auto')~> JoinReadersToBooksOuter\nJoinReadersToBooksOuter select(mapColumn(\n\t\tTitle,\n\t\tAuthor,\n\t\t{Author_l-f},\n\t\tAdditional_Authors,\n\t\tAverage_Rating,\n\t\tPublisher,\n\t\tBinding,\n\t\tNumber_of_Pages,\n\t\tYear_Published,\n\t\tOriginal_Publication_Year,\n\t\tBook_Id = AllReaders@Book_Id,\n\t\tISBN = AllReaders@ISBN,\n\t\tISBN13 = AllReaders@ISBN13,\n\t\tMy_Rating,\n\t\tDate_Read,\n\t\tDate_Added,\n\t\tBookshelves,\n\t\tExclusive_Shelf,\n\t\tMy_Review,\n\t\tSpoiler,\n\t\tRead_Count,\n\t\tOriginal_Purchase_Date,\n\t\tReader,\n\t\tPrivate_Notes\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns2\nRemoveDuplicateColumns sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tBook_Id as string,\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tMy_Rating as string,\n\t\tDate_Read as string,\n\t\tDate_Added as string,\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tMy_Review as string,\n\t\tSpoiler as string,\n\t\tRead_Count as string,\n\t\tOriginal_Purchase_Date as string\n\t),\n\tpartitionFileNames:['InnerJoinDataset.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> ReadersBooksInnerJoin\nRemoveDuplicateColumns2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tBook_Id as string,\n\t\tISBN as string,\n\t\tISBN13 as string,\n\t\tMy_Rating as string,\n\t\tDate_Read as string,\n\t\tDate_Added as string,\n\t\tBookshelves as string,\n\t\tExclusive_Shelf as string,\n\t\tMy_Review as string,\n\t\tSpoiler as string,\n\t\tRead_Count as string,\n\t\tOriginal_Purchase_Date as string\n\t),\n\tpartitionFileNames:['ReadersBooksOuterJoin.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> ReadersBooksOuterJoin"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ReadersBooksInnerJoin')]",
+				"[concat(variables('factoryId'), '/datasets/ReaderBooksOuterJoin')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ReadersBooksInnerJoin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureStorageLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "module5"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Book_Id",
+						"type": "String"
+					},
+					{
+						"name": "ISBN",
+						"type": "String"
+					},
+					{
+						"name": "ISBN13",
+						"type": "String"
+					},
+					{
+						"name": "My_Rating",
+						"type": "String"
+					},
+					{
+						"name": "Date_Read",
+						"type": "String"
+					},
+					{
+						"name": "Date_Added",
+						"type": "String"
+					},
+					{
+						"name": "Bookshelves",
+						"type": "String"
+					},
+					{
+						"name": "Exclusive_Shelf",
+						"type": "String"
+					},
+					{
+						"name": "My_Review",
+						"type": "String"
+					},
+					{
+						"name": "Spoiler",
+						"type": "String"
+					},
+					{
+						"name": "Read_Count",
+						"type": "String"
+					},
+					{
+						"name": "Original_Purchase_Date",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ReaderBooksOuterJoin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureStorageLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "module5"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Book_Id",
+						"type": "String"
+					},
+					{
+						"name": "ISBN",
+						"type": "String"
+					},
+					{
+						"name": "ISBN13",
+						"type": "String"
+					},
+					{
+						"name": "My_Rating",
+						"type": "String"
+					},
+					{
+						"name": "Date_Read",
+						"type": "String"
+					},
+					{
+						"name": "Date_Added",
+						"type": "String"
+					},
+					{
+						"name": "Bookshelves",
+						"type": "String"
+					},
+					{
+						"name": "Exclusive_Shelf",
+						"type": "String"
+					},
+					{
+						"name": "My_Review",
+						"type": "String"
+					},
+					{
+						"name": "Spoiler",
+						"type": "String"
+					},
+					{
+						"name": "Read_Count",
+						"type": "String"
+					},
+					{
+						"name": "Original_Purchase_Date",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}
