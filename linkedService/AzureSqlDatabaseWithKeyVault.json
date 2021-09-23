@@ -10,7 +10,7 @@
 					"referenceName": "AzureKeyVault1",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "ws-training-sqlConnString"
+				"secretName": "ws-trainingSqlConnString2"
 			}
 		}
 	}
