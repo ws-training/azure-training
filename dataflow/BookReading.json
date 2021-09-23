@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "BookReading",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
